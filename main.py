@@ -6,6 +6,9 @@ import os
 __LAST_IP_FILE__ = 'lastip.dat'
 __PASSWORD_FILE__ = 'sensiveEmailPassword.dat' #A separated file is necessary in order to use gitignore
 
+#enxfc8fc4081bee
+__NETWORK_DEVICE__ = 'enp3s0f1'
+
 def send_email(user, pwd, recipient, subject, body):
     import smtplib
 
@@ -46,7 +49,7 @@ if not os.path.exists(__LAST_IP_FILE__):
     file_.write("")
     file_.close()
 
-ip = get_ip_address('enp3s0f1')#enxfc8fc4081bee
+ip = get_ip_address(__NETWORK_DEVICE__)
 
 infile = open(__LAST_IP_FILE__, 'r')
 firstLine = infile.readline()
@@ -60,7 +63,7 @@ if firstLine != ip:
     file_ = open(__LAST_IP_FILE__, 'w')
     file_.write(str(ip))
     file_.close()
-    send_email("bernardo.godinho.oliveira@gmail.com", password, "bernardo.godinho.oliveira@gmail.com", "IP ACK", "test");
+    send_email("bernardo.godinho.oliveira@gmail.com", password, "bernardo.godinho.oliveira@gmail.com", "IP CHANGED", str(ip));
     print "different"
 else:
     print "equal"
