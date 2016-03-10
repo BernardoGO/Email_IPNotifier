@@ -3,6 +3,9 @@ import fcntl
 import struct
 import os
 
+__LAST_IP_FILE__ = 'lastip.dat'
+__PASSWORD_FILE__ = 'sensiveEmailPassword.dat' #A separated file is necessary in order to use gitignore
+
 def send_email(user, pwd, recipient, subject, body):
     import smtplib
 
@@ -33,22 +36,31 @@ def get_ip_address(ifname):
         struct.pack('256s', ifname[:15])
     )[20:24])
 
-if not os.path.exists('lastip.dat'):
-    file_ = open('lastip.dat', 'w')
+if not os.path.exists(__LAST_IP_FILE__):
+    file_ = open(__LAST_IP_FILE__, 'w')
     file_.write("")
     file_.close()
+
+if not os.path.exists(__LAST_IP_FILE__):
+    file_ = open(__PASSWORD_FILE__, 'w')
+    file_.write("")
+    file_.close()
+
 ip = get_ip_address('enp3s0f1')#enxfc8fc4081bee
-infile = open('lastip.dat', 'r')
+
+infile = open(__LAST_IP_FILE__, 'r')
 firstLine = infile.readline()
 infile.close()
+
+infile = open(__PASSWORD_FILE__, 'r')
+password = infile.readline()
+infile.close()
+
 if firstLine != ip:
-    file_ = open('lastip.dat', 'w')
+    file_ = open(__LAST_IP_FILE__, 'w')
     file_.write(str(ip))
     file_.close()
+    send_email("bernardo.godinho.oliveira@gmail.com", password, "bernardo.godinho.oliveira@gmail.com", "IP ACK", "test");
     print "different"
 else:
     print "equal"
-
-
-
-##send_email("bernardo.godinho.oliveira@gmail.com", "xxxx", "bernardo.godinho.oliveira@gmail.com", "IP ACK", "test");
