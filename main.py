@@ -32,19 +32,22 @@ def send_email(user, pwd, recipient, subject, body):
     print 'successfully sent the mail'
 
 def get_ip_address(ifname):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(
-        s.fileno(),
-        0x8915,  # SIOCGIFADDR
-        struct.pack('256s', ifname[:15])
-    )[20:24])
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        return socket.inet_ntoa(fcntl.ioctl(
+            s.fileno(),
+            0x8915,  # SIOCGIFADDR
+            struct.pack('256s', ifname[:15])
+        )[20:24])
+    except:
+        return ""
 
 if not os.path.exists(__LAST_IP_FILE__):
     file_ = open(__LAST_IP_FILE__, 'w')
     file_.write("")
     file_.close()
 
-if not os.path.exists(__LAST_IP_FILE__):
+if not os.path.exists(__PASSWORD_FILE__):
     file_ = open(__PASSWORD_FILE__, 'w')
     file_.write("")
     file_.close()
@@ -63,7 +66,11 @@ if firstLine != ip:
     file_ = open(__LAST_IP_FILE__, 'w')
     file_.write(str(ip))
     file_.close()
-    send_email("bernardo.godinho.oliveira@gmail.com", password, "bernardo.godinho.oliveira@gmail.com", "IP CHANGED", str(ip));
+    send_email("bernardo.godinho.oliveira@gmail.com", #you should not hardcode things
+                password,
+                "bernardo.godinho.oliveira@gmail.com",
+                "IP CHANGED",
+                str(ip));
     print "different"
 else:
     print "equal"
