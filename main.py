@@ -1,3 +1,8 @@
+import socket
+import fcntl
+import struct
+import os
+
 def send_email(user, pwd, recipient, subject, body):
     import smtplib
 
@@ -20,10 +25,6 @@ def send_email(user, pwd, recipient, subject, body):
     server.close()
     print 'successfully sent the mail'
 
-import socket
-import fcntl
-import struct
-
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     return socket.inet_ntoa(fcntl.ioctl(
@@ -32,5 +33,22 @@ def get_ip_address(ifname):
         struct.pack('256s', ifname[:15])
     )[20:24])
 
-ip = get_ip_address('enxfc8fc4081bee')
-send_email("bernardo.godinho.oliveira@gmail.com", "xxxx", "bernardo.godinho.oliveira@gmail.com", "IP ACK", "test");
+if not os.path.exists('lastip.dat'):
+    file_ = open('lastip.dat', 'w')
+    file_.write("")
+    file_.close()
+ip = get_ip_address('enp3s0f1')#enxfc8fc4081bee
+infile = open('lastip.dat', 'r')
+firstLine = infile.readline()
+infile.close()
+if firstLine != ip:
+    file_ = open('lastip.dat', 'w')
+    file_.write(str(ip))
+    file_.close()
+    print "different"
+else:
+    print "equal"
+
+
+
+##send_email("bernardo.godinho.oliveira@gmail.com", "xxxx", "bernardo.godinho.oliveira@gmail.com", "IP ACK", "test");
